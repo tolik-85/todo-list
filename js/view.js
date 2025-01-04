@@ -1,15 +1,14 @@
 const view = {
   onLoaded() {
+    controller.handleLoadPage()
     view.renderTaskForm()
     view.renderTasks()
   },
-  renderTasks() {
+  renderTasks(tasks) {
     let elTaskList = document.querySelector('#taskList')
     elTaskList.innerHTML = ''
-    const tasks = controller.handleUpdateTasks()
     tasks.forEach(el => {
       const task = generateTask(el)
-
       elTaskList.appendChild(task)
     })
   },

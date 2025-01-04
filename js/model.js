@@ -1,35 +1,41 @@
 const model = {
   tasks: ['foo', 'bar'],
-  stopWords: ['баклажан', 'помидор', 'огурец'],
+  badWords: ['баклажан', 'помидор', 'огурец'],
 
-  getTasks() {
-    return this.tasks
-  },
-  setNewTask(newTask) {
-    this.tasks.unshift(newTask)
-  },
-  deleteTask(task) {
-    const tasks = model.getTasks()
-    const taskIndex = tasks.indexOf(task)
-    tasks.splice(taskIndex, 1)
-  },
-  checkIncludedTask(task) {
-    const tasks = model.getTasks()
-    if (tasks.includes(task)) {
-      return `${task} уже есть в списке`
-    } else {
-      return false
+  hint: '',
+
+  addTask(task) {
+    if (this.isAlreadyExists(task)) {
+      this.hint = `${task} уже есть в списке`
+      return
     }
+    if (!this.isGoodTask(task)) {
+      this.hint = `${task} - не допускается в этом ToDo листе`
+      return
+    }
+    this.tasks.unshift(task)
   },
-  checkStopWords(stopWord) {
-    const stopWords = model.stopWords
-    stopWord = stopWord.toLowerCase()
-    const tasksR = stopWord.split(' ')
 
-    for (word of stopWords) {
-      if (tasksR.includes(word)) {
-        return `${word} - Не допускается в этом ToDo листе`
+  removeTask(task) {
+    const taskIndex = this.tasks.indexOf(task)
+    this.tasks.splice(taskIndex, 1)
+  },
+
+  isAlreadyExists(task) {
+    return this.tasks.includes(task)
+  },
+
+  isGoodTask(task) {
+    for (const badWord of this.badWords) {
+      if (task.includes(badWord)) {
+        return false
       }
     }
+    return true
   },
 }
+
+model.isGoodTask('добрый вечер всем!')
+
+// модель полностью сама по себе.
+// во view вызовы контроллера происходят в ответ на события

@@ -1,17 +1,17 @@
 const controller = {
   handleUpdateTasks() {
     const tasks = model.getTasks()
-
-    return tasks
+    view.renderTasks(tasks)
   },
+
   handleAddNewTask(task) {
     const tasks = model.getTasks()
 
-    const isIncludedTask = model.checkIncludedTask(task)
-    const stopWordCheck = model.checkStopWords(task)
+    const isIncludedTask = model.isAlreadyExists(task)
+    const stopWordCheck = model.isGoodTask(task)
 
     if (!isIncludedTask && !stopWordCheck) {
-      model.setNewTask(task)
+      model.addTask(task)
       view.renderTaskForm()
       view.renderTasks()
     } else if (isIncludedTask) {
@@ -25,7 +25,7 @@ const controller = {
     }
   },
   handleDeleteTask(task) {
-    model.deleteTask(task)
+    model.removeTask(task)
     view.renderTaskForm()
     view.renderTasks()
   },
