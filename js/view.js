@@ -1,59 +1,102 @@
 const view = {
   onLoaded() {
-    controller.handleLoadPage()
-    view.renderTaskForm()
-    view.renderTasks()
+    const storage = view.getFromLocalStorage()
+
+    if (storage) {
+      view.renderTasks(storage)
+      view.addEventListeners()
+    } else {
+      controller.handleLoadPage()
+      view.addEventListeners()
+    }
   },
+
+  saveToLocalStorage(tasks) {
+    localStorage.setItem('tasks', JSON.stringify(tasks))
+  },
+
+  getFromLocalStorage() {
+    const tasks = JSON.parse(localStorage.getItem('tasks'))
+    return tasks
+  },
+
   renderTasks(tasks) {
     let elTaskList = document.querySelector('#taskList')
     elTaskList.innerHTML = ''
-    tasks.forEach(el => {
-      const task = generateTask(el)
-      elTaskList.appendChild(task)
+
+    tasks.forEach(task => {
+      const elTask = generateTask(task)
+      elTaskList.appendChild(elTask)
     })
   },
-  renderParagraphMsg(msg) {
-    const elH1 = document.querySelector('h1')
 
-    const elParagraph = generateParagrphTextMsg(msg)
-    elH1.after(elParagraph)
-  },
-
-  renderTaskForm() {
-    let elBody = document.querySelector('body')
-    elBody.innerHTML = ''
-    const elTaskForm = generateTaskForm()
-    elBody.appendChild(elTaskForm)
-    document.querySelector('#taskInput').focus()
+  renderHint(msg) {
+    const elDiv = document.querySelector('h1+div')
+    const elHint = generateHint(msg)
+    elDiv.appendChild(elHint)
   },
 
   onEnterKeyDown() {
+    let elPar = document.querySelectorAll('.text-msg')
+    elPar.forEach(el => {
+      el.remove()
+    })
     const elTaskInput = document.querySelector('#taskInput')
     controller.handleAddNewTask(elTaskInput.value)
-    elTaskInput.focus()
     elTaskInput.value = ''
+
+    elTaskInput.focus()
   },
+
   onChangeElCheckBox(e) {
-    const elDeleteBtn = e.target.parentNode.querySelector('.deleteButton')
-    if (e.target.checked) {
-      elDeleteBtn.style.backgroundColor = '#35dc6b'
+    const elTaskName = e.target.parentNode.querySelector('span').innerHTML
+    const elCheckbox = e.target.parentNode.querySelector('.checkbox')
+    const elli = e.target.parentNode
+    const tasks = view.getFromLocalStorage()
+
+    tasks.forEach(task => {
+      if (task.name === elTaskName) {
+        task.checked = elCheckbox.checked
+      }
+    })
+
+    if (elli.classList.contains('completed')) {
+      elli.classList.remove('completed')
     } else {
-      elDeleteBtn.style.backgroundColor = '#dc3545'
+      elli.classList.add('completed')
     }
+    controller.handleChangeCheckbox(tasks)
+    view.saveToLocalStorage(tasks)
   },
+
   onClickDeleteTaskBtn(e) {
-    const deletedTask = e.target.parentNode.querySelector('span').innerHTML
     const checkBox = e.target.parentNode.querySelector('input')
+    const task = e.target.parentNode.querySelector('.task-text').innerHTML
+    let elPar = document.querySelectorAll('.text-msg')
     if (checkBox.checked) {
-      controller.handleDeleteTask(deletedTask)
+      controller.handleDeleteTask(task)
     } else {
-      view.renderTaskForm()
-      view.renderTasks()
-      view.renderParagraphMsg('Чекни чекбокс')
+      elPar.forEach(el => {
+        el.remove()
+      })
+      view.renderHint('Чекни чекбокс')
     }
   },
+
   onclickAddTaskBtn() {
     view.onEnterKeyDown()
+  },
+
+  addEventListeners() {
+    const elTaskInput = document.querySelector('#taskInput')
+
+    const elAddTaskBtn = document.querySelector('#addTaskButton')
+    elTaskInput.addEventListener('keyup', function (e) {
+      if (e.key === 'Enter') {
+        view.onEnterKeyDown()
+      }
+    })
+    elAddTaskBtn.addEventListener('click', view.onclickAddTaskBtn)
   },
 }
 document.addEventListener('DOMContentLoaded', view.onLoaded)

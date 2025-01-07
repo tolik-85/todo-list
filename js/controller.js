@@ -1,32 +1,28 @@
 const controller = {
-  handleUpdateTasks() {
-    const tasks = model.getTasks()
+  handleLoadPage() {
+    view.saveToLocalStorage(model.tasks)
+    const tasks = view.getFromLocalStorage()
     view.renderTasks(tasks)
   },
 
   handleAddNewTask(task) {
-    const tasks = model.getTasks()
+    console.log('handleAddNewTask(task)', task)
 
-    const isIncludedTask = model.isAlreadyExists(task)
-    const stopWordCheck = model.isGoodTask(task)
-
-    if (!isIncludedTask && !stopWordCheck) {
-      model.addTask(task)
-      view.renderTaskForm()
-      view.renderTasks()
-    } else if (isIncludedTask) {
-      view.renderTaskForm()
-      view.renderTasks()
-      view.renderParagraphMsg(isIncludedTask)
-    } else if (stopWordCheck) {
-      view.renderTaskForm()
-      view.renderTasks()
-      view.renderParagraphMsg(stopWordCheck)
+    model.addTask(task)
+    view.saveToLocalStorage(model.tasks)
+    const tasks = view.getFromLocalStorage()
+    view.renderTasks(tasks)
+    if (model.hint) {
+      view.renderHint(model.hint)
     }
+  },
+  handleChangeCheckbox(tasks) {
+    model.changeTasks(tasks)
   },
   handleDeleteTask(task) {
     model.removeTask(task)
-    view.renderTaskForm()
-    view.renderTasks()
+    view.saveToLocalStorage(model.tasks)
+    const storage = view.getFromLocalStorage()
+    view.renderTasks(storage)
   },
 }

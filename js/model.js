@@ -1,8 +1,26 @@
 const model = {
-  tasks: ['foo', 'bar'],
+  tasks: [
+    {
+      name: 'bar',
+      checked: true,
+    },
+    {
+      name: 'foo',
+      checked: false,
+    },
+  ],
+
   badWords: ['баклажан', 'помидор', 'огурец'],
 
   hint: '',
+
+  getHint() {
+    return model.hint
+  },
+
+  changeTasks(tasks) {
+    model.tasks = tasks
+  },
 
   addTask(task) {
     if (this.isAlreadyExists(task)) {
@@ -12,17 +30,25 @@ const model = {
     if (!this.isGoodTask(task)) {
       this.hint = `${task} - не допускается в этом ToDo листе`
       return
+    } else {
+      const obj = { name: task, checked: false }
+      this.tasks.unshift(obj)
+      model.hint = ''
     }
-    this.tasks.unshift(task)
+    console.log(model.tasks)
   },
 
-  removeTask(task) {
-    const taskIndex = this.tasks.indexOf(task)
-    this.tasks.splice(taskIndex, 1)
+  removeTask(taskName) {
+    model.tasks = model.tasks.filter(task => task.name !== taskName)
+    console.log(model.tasks)
   },
 
-  isAlreadyExists(task) {
-    return this.tasks.includes(task)
+  isAlreadyExists(taskName) {
+    for (const task of model.tasks) {
+      if (task.name === taskName) {
+        return true
+      }
+    }
   },
 
   isGoodTask(task) {
@@ -35,7 +61,7 @@ const model = {
   },
 }
 
-model.isGoodTask('добрый вечер всем!')
+// model.isGoodTask('добрый вечер всем!')
 
 // модель полностью сама по себе.
 // во view вызовы контроллера происходят в ответ на события

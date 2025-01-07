@@ -1,4 +1,4 @@
-function generateTask(taskText) {
+function generateTask(task) {
   const elLi = document.createElement('li')
   const elCheckbox = document.createElement('input')
   const elSpan = document.createElement('span')
@@ -9,9 +9,13 @@ function generateTask(taskText) {
   elCheckbox.classList.add('checkbox')
   elSpan.classList.add('task-text')
   elButton.classList.add('deleteButton')
-
-  elSpan.innerHTML = taskText
+  elSpan.innerHTML = task.name
   elButton.innerHTML = 'Удалить'
+
+  if (task.checked) {
+    elCheckbox.setAttribute('checked', 'true')
+    elLi.classList.add('completed')
+  }
 
   elLi.appendChild(elCheckbox)
   elLi.appendChild(elSpan)
@@ -22,42 +26,42 @@ function generateTask(taskText) {
   elCheckbox.addEventListener('change', view.onChangeElCheckBox)
   return elLi
 }
-function generateTaskForm() {
-  const elContainer = document.createElement('div')
-  const elH1 = document.createElement('h1')
-  const elDiv = document.createElement('div')
-  const elTaskInput = document.createElement('input')
-  const elAddTaskButton = document.createElement('button')
-  const elTaskList = document.createElement('ul')
+// function generateTaskForm() {
+//   const elContainer = document.createElement('div')
+//   const elH1 = document.createElement('h1')
+//   const elDiv = document.createElement('div')
+//   const elTaskInput = document.createElement('input')
+//   const elAddTaskButton = document.createElement('button')
+//   const elTaskList = document.createElement('ul')
 
-  elContainer.classList.add('container')
-  elTaskInput.setAttribute('type', 'text')
-  elTaskInput.setAttribute('placeholder', 'Введите задачу')
-  elTaskInput.setAttribute('id', 'taskInput')
-  elTaskInput.setAttribute('autofocus', '')
-  elAddTaskButton.setAttribute('id', 'addTaskButton')
-  elTaskList.setAttribute('id', 'taskList')
+//   elContainer.classList.add('container')
+//   elTaskInput.setAttribute('type', 'text')
+//   elTaskInput.setAttribute('placeholder', 'Введите задачу')
+//   elTaskInput.setAttribute('id', 'taskInput')
+//   elTaskInput.setAttribute('autofocus', '')
+//   elAddTaskButton.setAttribute('id', 'addTaskButton')
+//   elTaskList.setAttribute('id', 'taskList')
 
-  elAddTaskButton.innerHTML = 'Добавить задачу'
-  elH1.innerHTML = 'Список задач'
+//   elAddTaskButton.innerHTML = 'Добавить задачу'
+//   elH1.innerHTML = 'Список задач'
 
-  elTaskInput.addEventListener('keyup', function (e) {
-    if (e.key === 'Enter') {
-      view.onEnterKeyDown()
-    }
-  })
-  elAddTaskButton.addEventListener('click', view.onclickAddTaskBtn)
+//   elTaskInput.addEventListener('keyup', function (e) {
+//     if (e.key === 'Enter') {
+//       view.onEnterKeyDown()
+//     }
+//   })
+//   elAddTaskButton.addEventListener('click', view.onclickAddTaskBtn)
 
-  elDiv.appendChild(elTaskInput)
-  elDiv.appendChild(elAddTaskButton)
+//   elDiv.appendChild(elTaskInput)
+//   elDiv.appendChild(elAddTaskButton)
 
-  elContainer.appendChild(elH1)
-  elContainer.appendChild(elDiv)
-  elContainer.appendChild(elTaskList)
+//   elContainer.appendChild(elH1)
+//   elContainer.appendChild(elDiv)
+//   elContainer.appendChild(elTaskList)
 
-  return elContainer
-}
-function generateParagrphTextMsg(msg) {
+//   return elContainer
+// }
+function generateHint(msg) {
   const elParagraph = document.createElement('p')
   elParagraph.classList.add('text-msg')
   elParagraph.innerHTML = msg
