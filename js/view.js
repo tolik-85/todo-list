@@ -1,96 +1,75 @@
 const view = {
-  onLoaded() {
-    const locStorage = storage.getFromLocalStorage()
-
-    if (locStorage) {
-      view.renderTasks(locStorage)
-      view.addEventListeners()
-    } else {
-      controller.handleLoadPage()
-      view.addEventListeners()
-    }
-  },
-
   renderTasks(tasks) {
-    let elTaskList = document.querySelector('#taskList')
+    const elTaskList = document.querySelector('#taskList')
     elTaskList.innerHTML = ''
-
     tasks.forEach(task => {
       const elTask = generateTask(task)
       elTaskList.appendChild(elTask)
     })
   },
 
-  renderHint(msg) {
+  renderHint(hint) {
     const elDiv = document.querySelector('h1+div')
-    const elHint = generateHint(msg)
+    const elHint = generateHint(hint)
     elDiv.appendChild(elHint)
   },
 
-  onEnterKeyDown() {
-    let elPar = document.querySelectorAll('.text-msg')
-    elPar.forEach(el => {
-      el.remove()
-    })
-    const elTaskInput = document.querySelector('#taskInput')
-    controller.handleAddNewTask(elTaskInput.value)
-    elTaskInput.value = ''
+  onLoaded() {
+    view.addEventListeners()
+    controller.handleLoadPage()
+  },
 
+  onEnterKeyDown() {
+    // const listParagraphs = document.querySelectorAll('.text-msg')
+    // listParagraphs.forEach(elParagraph => {
+    //   elParagraph.remove()
+    // })
+    const elTaskInput = document.querySelector('#taskInput')
+    controller.handleAddTask(elTaskInput.value)
+    elTaskInput.value = ''
     elTaskInput.focus()
   },
 
-  onChangeElCheckBox(e) {
-    const elTaskName = e.target.parentNode.querySelector('span').innerHTML
-    const elCheckbox = e.target.parentNode.querySelector('.checkbox')
-    const elli = e.target.parentNode
-    const tasks = storage.getFromLocalStorage()
-
-    tasks.forEach(task => {
-      if (task.name === elTaskName) {
-        task.checked = elCheckbox.checked
-      }
-    })
-
-    if (elli.classList.contains('completed')) {
-      elli.classList.remove('completed')
-    } else {
-      elli.classList.add('completed')
-    }
-    controller.handleChangeCheckbox(tasks)
-    storage.saveToLocalStorage(tasks)
+  onChangeCheckbox(e) {
+    const elLi = e.target.parentNode
+    const isChecked = elLi.querySelector('.checkbox').checked
+    const taskName = elLi.querySelector('span').textContent
+    controller.handleCompleteTask(taskName, isChecked)
   },
 
   onClickDeleteTaskBtn(e) {
     const checkBox = e.target.parentNode.querySelector('input')
     const task = e.target.parentNode.querySelector('.task-text').innerHTML
-    let elPar = document.querySelectorAll('.text-msg')
-    if (checkBox.checked) {
-      controller.handleDeleteTask(task)
-      elPar.forEach(el => {
-        el.remove()
-      })
-    } else {
-      elPar.forEach(el => {
-        el.remove()
-      })
-      view.renderHint('Чекни чекбокс')
-    }
+    // let elPar = document.querySelectorAll('.text-msg')
+    // if (checkBox.checked) {
+    controller.handleDeleteTask(task)
+    //   elPar.forEach(el => {
+    //     el.remove()
+    //   })
+    // } else {
+    //   elPar.forEach(el => {
+    //     el.remove()
+    //   })
+    //   view.renderHint('Чекни чекбокс')
+    // }
   },
 
-  onclickAddTaskBtn() {
+  onClickAddTaskBtn() {
     view.onEnterKeyDown()
+  },
+
+  onKeyUpInputTask(e) {
+    if (e.key === 'Enter') {
+      view.onEnterKeyDown()
+    }
   },
 
   addEventListeners() {
     const elTaskInput = document.querySelector('#taskInput')
-
     const elAddTaskBtn = document.querySelector('#addTaskButton')
-    elTaskInput.addEventListener('keyup', function (e) {
-      if (e.key === 'Enter') {
-        view.onEnterKeyDown()
-      }
-    })
-    elAddTaskBtn.addEventListener('click', view.onclickAddTaskBtn)
+
+    elTaskInput.addEventListener('keyup', this.onKeyUpInputTask)
+    elAddTaskBtn.addEventListener('click', this.onClickAddTaskBtn)
   },
 }
 document.addEventListener('DOMContentLoaded', view.onLoaded)

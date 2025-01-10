@@ -1,10 +1,10 @@
 const storage = {
-  saveToLocalStorage(tasks) {
+  saveTasks(tasks) {
     localStorage.setItem('tasks', JSON.stringify(tasks))
   },
 
-  getFromLocalStorage() {
+  restoreTasks() {
     const tasks = JSON.parse(localStorage.getItem('tasks'))
-    return tasks
+    return tasks ?? []
   },
 }

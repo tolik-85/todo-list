@@ -1,29 +1,28 @@
 const controller = {
   handleLoadPage() {
-    storage.saveToLocalStorage(model.tasks)
-    const tasks = storage.getFromLocalStorage()
+    const tasks = storage.restoreTasks()
+    model.setTasks(tasks)
     view.renderTasks(tasks)
   },
 
-  handleAddNewTask(task) {
+  handleAddTask(task) {
     model.addTask(task)
-    storage.saveToLocalStorage(model.tasks)
-    const tasks = storage.getFromLocalStorage()
-    view.renderTasks(tasks)
-    if (model.hint) {
-      view.renderHint(model.hint)
-    }
+    storage.saveTasks(model.tasks)
+    view.renderTasks(model.tasks)
+    view.renderHint(model.hint)
   },
-  handleChangeCheckbox(tasks) {
-    model.changeTasks(tasks)
+
+  handleCompleteTask(name, state) {
+    model.setTaskStateByName(name, state)
+    storage.saveTasks(model.tasks)
+    view.renderTasks(model.tasks)
+    view.renderHint(model.hint)
   },
+
   handleDeleteTask(task) {
     model.removeTask(task)
-    storage.saveToLocalStorage(model.tasks)
-    const locStorage = storage.getFromLocalStorage()
-    view.renderTasks(locStorage)
-    console.log(model.hint)
-
+    storage.saveTasks(model.tasks)
+    view.renderTasks(model.tasks)
     view.renderHint(model.hint)
   },
 }

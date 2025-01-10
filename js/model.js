@@ -1,25 +1,31 @@
 const model = {
-  tasks: [
-    {
-      name: 'bar',
-      checked: true,
-    },
-    {
-      name: 'foo',
-      checked: false,
-    },
-  ],
+  tasks: [],
+
+  tasksCounter: 0,
 
   badWords: ['баклажан', 'помидор', 'огурец'],
 
   hint: '',
 
-  getHint() {
-    return model.hint
+  setTasks(tasks) {
+    this.tasks = tasks
+    this.calcTasksCounter()
   },
 
-  changeTasks(tasks) {
-    model.tasks = tasks
+  calcTasksCounter() {
+    this.tasksCounter = this.tasks.length
+  },
+
+  getHint() {
+    return this.hint
+  },
+
+  setTaskStateByName(name, state) {
+    this.tasks.forEach(task => {
+      if (task.name === name) {
+        task.checked = state
+      }
+    })
   },
 
   addTask(task) {
@@ -32,24 +38,24 @@ const model = {
       return
     }
     if (this.isOnlySpace(task)) {
-      model.hint = 'Не допускается пустой ввод, а также множество пробелов'
+      this.hint = 'Не допускается пустой ввод, а также множество пробелов'
       return
     } else {
       const obj = { name: task, checked: false }
       this.tasks.unshift(obj)
-      model.hint = ''
+      this.hint = ''
     }
-    console.log(model.tasks)
+    this.calcTasksCounter()
   },
 
   removeTask(taskName) {
-    model.tasks = model.tasks.filter(task => task.name !== taskName)
-
-    model.hint = ''
+    this.tasks = this.tasks.filter(task => task.name !== taskName)
+    this.hint = ''
+    this.calcTasksCounter()
   },
 
   isAlreadyExists(taskName) {
-    for (const task of model.tasks) {
+    for (const task of this.tasks) {
       if (task.name === taskName) {
         return true
       }
