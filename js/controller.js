@@ -1,16 +1,14 @@
 const controller = {
   handleLoadPage() {
-    view.saveToLocalStorage(model.tasks)
-    const tasks = view.getFromLocalStorage()
+    storage.saveToLocalStorage(model.tasks)
+    const tasks = storage.getFromLocalStorage()
     view.renderTasks(tasks)
   },
 
   handleAddNewTask(task) {
-    console.log('handleAddNewTask(task)', task)
-
     model.addTask(task)
-    view.saveToLocalStorage(model.tasks)
-    const tasks = view.getFromLocalStorage()
+    storage.saveToLocalStorage(model.tasks)
+    const tasks = storage.getFromLocalStorage()
     view.renderTasks(tasks)
     if (model.hint) {
       view.renderHint(model.hint)
@@ -21,8 +19,11 @@ const controller = {
   },
   handleDeleteTask(task) {
     model.removeTask(task)
-    view.saveToLocalStorage(model.tasks)
-    const storage = view.getFromLocalStorage()
-    view.renderTasks(storage)
+    storage.saveToLocalStorage(model.tasks)
+    const locStorage = storage.getFromLocalStorage()
+    view.renderTasks(locStorage)
+    console.log(model.hint)
+
+    view.renderHint(model.hint)
   },
 }

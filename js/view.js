@@ -1,23 +1,14 @@
 const view = {
   onLoaded() {
-    const storage = view.getFromLocalStorage()
+    const locStorage = storage.getFromLocalStorage()
 
-    if (storage) {
-      view.renderTasks(storage)
+    if (locStorage) {
+      view.renderTasks(locStorage)
       view.addEventListeners()
     } else {
       controller.handleLoadPage()
       view.addEventListeners()
     }
-  },
-
-  saveToLocalStorage(tasks) {
-    localStorage.setItem('tasks', JSON.stringify(tasks))
-  },
-
-  getFromLocalStorage() {
-    const tasks = JSON.parse(localStorage.getItem('tasks'))
-    return tasks
   },
 
   renderTasks(tasks) {
@@ -52,7 +43,7 @@ const view = {
     const elTaskName = e.target.parentNode.querySelector('span').innerHTML
     const elCheckbox = e.target.parentNode.querySelector('.checkbox')
     const elli = e.target.parentNode
-    const tasks = view.getFromLocalStorage()
+    const tasks = storage.getFromLocalStorage()
 
     tasks.forEach(task => {
       if (task.name === elTaskName) {
@@ -66,7 +57,7 @@ const view = {
       elli.classList.add('completed')
     }
     controller.handleChangeCheckbox(tasks)
-    view.saveToLocalStorage(tasks)
+    storage.saveToLocalStorage(tasks)
   },
 
   onClickDeleteTaskBtn(e) {
@@ -75,6 +66,9 @@ const view = {
     let elPar = document.querySelectorAll('.text-msg')
     if (checkBox.checked) {
       controller.handleDeleteTask(task)
+      elPar.forEach(el => {
+        el.remove()
+      })
     } else {
       elPar.forEach(el => {
         el.remove()

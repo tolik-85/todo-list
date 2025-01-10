@@ -30,6 +30,10 @@ const model = {
     if (!this.isGoodTask(task)) {
       this.hint = `${task} - не допускается в этом ToDo листе`
       return
+    }
+    if (this.isOnlySpace(task)) {
+      model.hint = 'Не допускается пустой ввод, а также множество пробелов'
+      return
     } else {
       const obj = { name: task, checked: false }
       this.tasks.unshift(obj)
@@ -40,7 +44,8 @@ const model = {
 
   removeTask(taskName) {
     model.tasks = model.tasks.filter(task => task.name !== taskName)
-    console.log(model.tasks)
+
+    model.hint = ''
   },
 
   isAlreadyExists(taskName) {
@@ -58,6 +63,13 @@ const model = {
       }
     }
     return true
+  },
+  isOnlySpace(task) {
+    task = task.trim()
+    if (task === '') {
+      // model.hint = 'Не допускается пустой ввод, а также множество пробелов'
+      return true
+    }
   },
 }
 
