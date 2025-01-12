@@ -19,8 +19,8 @@ const controller = {
     view.renderHint(model.hint)
   },
 
-  handleDeleteTask(task) {
-    model.removeTask(task)
+  handleDeleteTask(task, state) {
+    model.removeTask(task, state)
     storage.saveTasks(model.tasks)
     view.renderTasks(model.tasks)
     view.renderHint(model.hint)

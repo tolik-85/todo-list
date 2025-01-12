@@ -48,12 +48,22 @@ const model = {
     this.calcTasksCounter()
   },
 
-  removeTask(taskName) {
-    this.tasks = this.tasks.filter(task => task.name !== taskName)
-    this.hint = ''
-    this.calcTasksCounter()
-  },
+  removeTask(taskName, state) {
+    console.log('removeTask', taskName, state)
 
+    if (this.isCompleteTask(state)) {
+      this.tasks = this.tasks.filter(task => task.name !== taskName)
+      this.hint = ''
+      this.calcTasksCounter()
+    }
+  },
+  isCompleteTask(state) {
+    if (state) {
+      return true
+    } else {
+      this.hint = 'Чекни чекбокс'
+    }
+  },
   isAlreadyExists(taskName) {
     for (const task of this.tasks) {
       if (task.name === taskName) {

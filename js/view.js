@@ -9,9 +9,14 @@ const view = {
   },
 
   renderHint(hint) {
-    const elDiv = document.querySelector('h1+div')
+    const elHintMsg = document.querySelector('.text-msg')
+    if (elHintMsg) {
+      elHintMsg.remove()
+    }
+
+    const elInput = document.querySelector('#taskInput')
     const elHint = generateHint(hint)
-    elDiv.appendChild(elHint)
+    elInput.after(elHint)
   },
 
   onLoaded() {
@@ -20,10 +25,6 @@ const view = {
   },
 
   onEnterKeyDown() {
-    // const listParagraphs = document.querySelectorAll('.text-msg')
-    // listParagraphs.forEach(elParagraph => {
-    //   elParagraph.remove()
-    // })
     const elTaskInput = document.querySelector('#taskInput')
     controller.handleAddTask(elTaskInput.value)
     elTaskInput.value = ''
@@ -39,19 +40,9 @@ const view = {
 
   onClickDeleteTaskBtn(e) {
     const checkBox = e.target.parentNode.querySelector('input')
+    const state = checkBox.checked
     const task = e.target.parentNode.querySelector('.task-text').innerHTML
-    // let elPar = document.querySelectorAll('.text-msg')
-    // if (checkBox.checked) {
-    controller.handleDeleteTask(task)
-    //   elPar.forEach(el => {
-    //     el.remove()
-    //   })
-    // } else {
-    //   elPar.forEach(el => {
-    //     el.remove()
-    //   })
-    //   view.renderHint('Чекни чекбокс')
-    // }
+    controller.handleDeleteTask(task, state)
   },
 
   onClickAddTaskBtn() {
