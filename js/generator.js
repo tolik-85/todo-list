@@ -26,10 +26,3 @@ function generateTask(task) {
 
   return elLi
 }
-
-function generateHint(hint) {
-  const elParagraph = document.createElement('p')
-  elParagraph.classList.add('text-msg')
-  elParagraph.textContent = hint
-  return elParagraph
-}

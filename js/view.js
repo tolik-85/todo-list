@@ -9,14 +9,8 @@ const view = {
   },
 
   renderHint(hint) {
-    const elHintMsg = document.querySelector('.text-msg')
-    if (elHintMsg) {
-      elHintMsg.remove()
-    }
-
-    const elInput = document.querySelector('#taskInput')
-    const elHint = generateHint(hint)
-    elInput.after(elHint)
+    const elParagraph = document.querySelector('p.text-msg')
+    elParagraph.textContent = hint
   },
 
   onLoaded() {
