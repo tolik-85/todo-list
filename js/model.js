@@ -7,6 +7,10 @@ const model = {
 
   hint: '',
 
+  calc(a, b) {
+    return a + b
+  },
+
   setTasks(tasks) {
     this.tasks = tasks
     this.calcTasksCounter()
