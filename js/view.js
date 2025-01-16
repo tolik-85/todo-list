@@ -58,3 +58,7 @@ const view = {
   },
 }
 document.addEventListener('DOMContentLoaded', view.onLoaded)
+
+function renderHello (text) {
+  document.querySelector('h1').textContent = text;
+}
